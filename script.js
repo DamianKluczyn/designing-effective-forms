@@ -1,6 +1,8 @@
 let clickCount = 0;
 
 const countryInput = document.getElementById('country');
+const countryCodeInput = document.getElementById('countryCode');
+const phoneNumberInput = document.getElementById('phoneNumber');
 const myForm = document.getElementById('form');
 const modal = document.getElementById('form-feedback-modal');
 const clicksInfo = document.getElementById('click-count');
@@ -24,12 +26,21 @@ async function fetchAndFillCountries() {
     }
 }
 
+function insertCountry(country) {
+    countryInput.value = country;
+}
+
+function insertCountryCode(countryCode) {
+    countryCodeInput.value = countryCode;
+}
+
 function getCountryByIP() {
     fetch('https://get.geojs.io/v1/ip/geo.json')
         .then(response => response.json())
         .then(data => {
             const country = data.country;
-            document.getElementById('countryName').textContent = country;
+            insertCountry(country);
+            getCountryCode(country);
         })
         .catch(error => {
             console.error('Błąd pobierania danych z serwera GeoJS:', error);
@@ -48,12 +59,14 @@ function getCountryCode() {
         return response.json();
     })
     .then(data => {        
-        const countryCode = data[0].idd.root + data[0].idd.suffixes.join("")
+        const countryCode = data[0].idd.root + data[0].idd.suffixes.join("");
+            insertCountryCode(countryCode);
     })
     .catch(error => {
         console.error('Wystąpił błąd:', error);
     });
 }
+
 
 
 (() => {
